@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload a song - SonicWave</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg: #080b12;
+    --surface: #101722;
+    --primary: #28e0bd;
+    --text: #f4f7fb;
+    --muted: #8592a5;
+    --border: rgba(255,255,255,.1);
+    --error: #ff6b81;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    padding: 40px 20px;
+}
+
+.card {
+    max-width: 520px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 32px;
+}
+
+h1 { font-size: 24px; margin-bottom: 6px; }
+.sub { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+
+.field { margin-bottom: 18px; }
+
+label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 7px; }
+
+input[type="text"],
+input[type="file"] {
+    width: 100%;
+    background: #080e17;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+}
+
+input[type="text"]:focus { outline: none; border-color: var(--primary); }
+
+.check { display: flex; align-items: flex-start; gap: 10px; }
+.check input { margin-top: 3px; }
+.check label { margin: 0; font-weight: 400; color: var(--muted); }
+
+.error { color: var(--error); font-size: 12px; margin-top: 6px; }
+
+button {
+    width: 100%;
+    background: var(--primary);
+    color: #071611;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 6px;
+}
+
+button:hover { opacity: .9; }
+
+.back { display: block; text-align: center; margin-top: 18px; color: var(--muted); font-size: 13px; text-decoration: none; }
+.back:hover { color: var(--primary); }
+</style>
+</head>
+
+<body>
+<div class="card">
+
+    <h1>Upload a song</h1>
+    <p class="sub">MP3, WAV, FLAC or M4A. The length is detected automatically.</p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="error">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="field">
+            <label for="{{ form.title.id_for_label }}">Title</label>
+            {{ form.title }}
+            {% for e in form.title.errors %}<div class="error">{{ e }}</div>{% endfor %}
+        </div>
+
+        <div class="field">
+            <label for="{{ form.artist.id_for_label }}">Artist</label>
+            {{ form.artist }}
+            {% for e in form.artist.errors %}<div class="error">{{ e }}</div>{% endfor %}
+        </div>
+
+        <div class="field">
+            <label for="{{ form.audio_file.id_for_label }}">Audio file</label>
+            {{ form.audio_file }}
+            {% for e in form.audio_file.errors %}<div class="error">{{ e }}</div>{% endfor %}
+        </div>
+
+        <div class="field check">
+            {{ form.is_explicit }}
+            <label for="{{ form.is_explicit.id_for_label }}">This track contains explicit content</label>
+        </div>
+
+        <div class="field check">
+            {{ form.copyright_confirmed }}
+            <label for="{{ form.copyright_confirmed.id_for_label }}">{{ form.copyright_confirmed.label }}</label>
+        </div>
+        {% for e in form.copyright_confirmed.errors %}<div class="error">{{ e }}</div>{% endfor %}
+
+        <button type="submit">Upload</button>
+    </form>
+
+    <a class="back" href="{% url 'song_list' %}">Back to all songs</a>
+
+</div>
+</body>
+</html>

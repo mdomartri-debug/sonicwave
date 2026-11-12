@@ -1,9 +1,9 @@
-from django.db import models
-
 from datetime import timedelta
 
 from django.conf import settings
+from django.db import models
 from django.utils import timezone
+
 
 class Song(models.Model):
     title = models.CharField(max_length=200)
@@ -12,6 +12,15 @@ class Song(models.Model):
     is_explicit = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     audio_file = models.FileField(upload_to='songs/', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.title} by {self.artist}"
+
+    def length(self):
+        minutes = self.duration_seconds // 60
+        seconds = self.duration_seconds % 60
+        return f"{minutes}:{seconds:02d}"
+
 
 class EmailOTP(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -24,12 +33,3 @@ class EmailOTP(models.Model):
 
     def __str__(self):
         return f"OTP for {self.user}"
-
-    def __str__(self):
-        return f"{self.title} by {self.artist}"
-
-    def length(self):
-        minutes = self.duration_seconds // 60
-        seconds = self.duration_seconds % 60
-        return f"{minutes}:{seconds:02d}"
-    
