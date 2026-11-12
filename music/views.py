@@ -4,6 +4,20 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
+from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
+from django.views.decorators.http import require_POST
+from mutagen import File as MutagenFile
+
+from .forms import RegisterForm, SongUploadForm
+from .models import Song, EmailOTP
+from datetime import timedelta
+
+from django.conf import settings
+from django.contrib.auth import get_user_model, login
+from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.http import request
 from django.shortcuts import render, get_object_or_404, redirect
