@@ -1,10 +1,892 @@
-<h1> SonicWave Songs</h1>
-<ul>
-    {% for song in songs %}
-      <li>{{ song.title }} by {{ song.artist }} ({{ song.length }})</li>
-    {% empty %}
-      <li> No songs yet.</li>
-    {% endfor %}
-</ul>
 
-    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SonicWave — Beyond the Sound</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root {
+    --bg: #080b12;
+    --surface: #101722;
+    --surface2: #151f2c;
+    --primary: #28e0bd;
+    --secondary: #9b83ff;
+    --text: #f4f7fb;
+    --muted: #8592a5;
+    --border: rgba(255,255,255,.075);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    padding: 35px 22px 50px;
+}
+
+/* BACKGROUND */
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    filter: blur(150px);
+    opacity: .12;
+    pointer-events: none;
+    z-index: -1;
+}
+
+body::before {
+    background: #00e6bb;
+    top: -180px;
+    right: -100px;
+}
+
+body::after {
+    background: #7656ff;
+    bottom: -200px;
+    left: -150px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1050px;
+    margin: auto;
+}
+
+/* NAVBAR */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 85px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    font-size: 23px;
+    font-weight: 900;
+    letter-spacing: -1.2px;
+}
+
+.logo-icon {
+    width: 45px;
+    height: 45px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #39f3cb, #08a88c);
+    color: #061511;
+    font-size: 19px;
+    box-shadow: 0 8px 30px #18dcb544;
+}
+
+.logo span {
+    color: var(--primary);
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.studio-label {
+    color: #a3afbf;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.studio-label i {
+    color: var(--primary);
+    margin-right: 8px;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border: 1px solid var(--border);
+    background: #ffffff06;
+    border-radius: 30px;
+    color: #a6b2c1;
+    font-size: 11px;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--primary);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--primary);
+}
+
+/* HERO */
+
+.hero {
+    margin-bottom: 52px;
+    position: relative;
+    animation: fadeUp .8s ease both;
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--primary);
+    background: #28e0bd0d;
+    border: 1px solid #28e0bd26;
+    border-radius: 30px;
+    padding: 10px 16px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.8px;
+    margin-bottom: 25px;
+}
+
+.eyebrow i {
+    font-size: 9px;
+    animation: pulse 2s infinite;
+}
+
+.hero h1 {
+    font-size: clamp(43px, 7vw, 76px);
+    font-weight: 900;
+    letter-spacing: -5px;
+    line-height: 1.08;
+    margin-bottom: 22px;
+}
+
+.hero h1 span {
+    background: linear-gradient(100deg, #36edc9, #8d7bff 85%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    max-width: 480px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+.hero-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+/* DECORATIVE VISUALIZER */
+
+.visualizer {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 50px;
+    opacity: .8;
+}
+
+.visualizer span {
+    width: 4px;
+    height: 15px;
+    border-radius: 5px;
+    background: linear-gradient(to top, #27c8b1, #a18aff);
+    animation: wave .8s ease-in-out infinite alternate;
+}
+
+.visualizer span:nth-child(2n) { animation-delay: .2s; }
+.visualizer span:nth-child(3n) { animation-delay: .4s; }
+.visualizer span:nth-child(4n) { animation-delay: .1s; }
+
+@keyframes wave {
+    from { height: 8px; }
+    to { height: 42px; }
+}
+
+/* MUSIC PANEL */
+
+.music-panel {
+    position: relative;
+    background: linear-gradient(145deg, #141e2b, #0f1722);
+    border: 1px solid var(--border);
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 25px 90px #00000045;
+    overflow: hidden;
+    animation: fadeUp 1s ease both;
+}
+
+.music-panel::before {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 200px;
+    background: #1dd6b5;
+    filter: blur(130px);
+    opacity: .06;
+    top: -120px;
+    right: -50px;
+    pointer-events: none;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    position: relative;
+}
+
+.panel-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.panel-title {
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -.6px;
+}
+
+.panel-subtitle {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.library-count {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 10px 15px;
+    background: #28e0bd0d;
+    border: 1px solid #28e0bd25;
+    border-radius: 12px;
+}
+
+/* SEARCH */
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #080e17;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 0 17px;
+    height: 49px;
+    margin-bottom: 23px;
+    transition: .3s;
+}
+
+.search-box:focus-within {
+    border-color: #28e0bd75;
+    box-shadow: 0 0 0 3px #28e0bd0d;
+}
+
+.search-box i {
+    color: #748398;
+    font-size: 14px;
+}
+
+.search-box input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.search-box input::placeholder {
+    color: #69788c;
+}
+
+/* SONG LIST */
+
+ul {
+    list-style: none;
+}
+
+li.song-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 13px 15px;
+    margin-bottom: 10px;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    background: #ffffff04;
+    transition: .3s ease;
+    animation: fadeUp .5s ease both;
+}
+
+li.song-item:hover {
+    background: linear-gradient(100deg, #28e0bd0c, #9b83ff0b);
+    border-color: #28e0bd30;
+    transform: translateY(-3px);
+}
+
+.song-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.song-art {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1cdbc0, #6455c8);
+    color: #fff;
+    font-size: 19px;
+    box-shadow: 0 6px 20px #00000030;
+}
+
+.song-item:nth-child(3n+2) .song-art {
+    background: linear-gradient(135deg, #ed8cba, #825bda);
+}
+
+.song-item:nth-child(3n) .song-art {
+    background: linear-gradient(135deg, #e4a45d, #db557b);
+}
+
+.song-item:nth-child(4n) .song-art {
+    background: linear-gradient(135deg, #43c6ac, #2872a5);
+}
+
+.song-art::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(145deg, #ffffff35, transparent 60%);
+}
+
+.song-details {
+    min-width: 0;
+}
+
+.song-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -.2px;
+    margin-bottom: 7px;
+    overflow-wrap: anywhere;
+}
+
+.artist {
+    color: #8392a6;
+    font-size: 11px;
+}
+
+.artist i {
+    margin-right: 5px;
+    color: #63748a;
+}
+
+.song-meta {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    flex-shrink: 0;
+}
+
+.length {
+    color: #a8b4c5;
+    font-size: 10px;
+    font-weight: 600;
+    background: #ffffff09;
+    border: 1px solid #ffffff0c;
+    padding: 8px 11px;
+    border-radius: 8px;
+}
+
+.play-btn {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #ffffff12;
+    border-radius: 50%;
+    color: #9aa7b9;
+    background: #ffffff07;
+    font-size: 12px;
+    transition: .3s;
+    cursor: pointer;
+}
+
+.play-btn:hover {
+    background: var(--primary);
+    color: #071611;
+    border-color: var(--primary);
+    box-shadow: 0 0 20px #28e0bd45;
+    transform: scale(1.08);
+}
+
+/* EMPTY STATE */
+
+.empty-state {
+    text-align: center;
+    padding: 65px 15px;
+    color: var(--muted);
+}
+
+.empty-icon {
+    width: 85px;
+    height: 85px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 23px;
+    border-radius: 27px;
+    font-size: 32px;
+    color: var(--primary);
+    background: linear-gradient(135deg, #28e0bd18, #9b83ff18);
+    border: 1px solid #28e0bd20;
+}
+
+.empty-state h3 {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.no-results {
+    display: none;
+    text-align: center;
+    padding: 30px 10px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* FOOTER */
+
+.footer {
+    text-align: center;
+    margin-top: 30px;
+    color: #627085;
+    font-size: 10px;
+    letter-spacing: 1.7px;
+    font-weight: 600;
+}
+
+.footer span {
+    color: var(--primary);
+}
+
+.footer i {
+    color: var(--primary);
+    margin-right: 6px;
+}
+
+/* ANIMATIONS */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .35; }
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 650px) {
+    body {
+        padding: 25px 14px 35px;
+    }
+
+    .navbar {
+        margin-bottom: 65px;
+    }
+
+    .nav-right {
+        gap: 10px;
+    }
+
+    .studio-label {
+        display: none;
+    }
+
+    .hero h1 {
+        letter-spacing: -3px;
+    }
+
+    .hero-bottom {
+        align-items: start;
+    }
+
+    .visualizer {
+        display: none;
+    }
+
+    .music-panel {
+        padding: 19px 13px;
+        border-radius: 19px;
+    }
+
+    .panel-header {
+        gap: 10px;
+    }
+
+    .panel-title {
+        font-size: 16px;
+    }
+
+    .library-count {
+        padding: 8px 10px;
+        font-size: 10px;
+    }
+
+    li.song-item {
+        padding: 11px 8px;
+        gap: 8px;
+    }
+
+    .song-info {
+        gap: 10px;
+    }
+
+    .song-art {
+        width: 44px;
+        height: 44px;
+        border-radius: 11px;
+        font-size: 15px;
+    }
+
+    .song-title {
+        font-size: 11px;
+    }
+
+    .artist {
+        font-size: 10px;
+    }
+
+    .song-meta {
+        gap: 7px;
+    }
+
+    .length {
+        font-size: 9px;
+        padding: 7px;
+    }
+
+    .play-btn {
+        width: 31px;
+        height: 31px;
+        font-size: 10px;
+    }
+}
+
+@media(max-width: 370px) {
+    .status {
+        font-size: 9px;
+        padding: 8px 9px;
+    }
+
+    .logo {
+        font-size: 19px;
+    }
+
+    .song-meta {
+        gap: 5px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-wave-square"></i>
+            </div>
+            Sonic<span>Wave.</span>
+        </div>
+
+        <div class="nav-right">
+
+            <div class="studio-label">
+                <i class="fas fa-headphones"></i>
+                Music Studio
+            </div>
+
+            <div class="status">
+                <span class="status-dot"></span>
+                YOUR MUSIC SPACE
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="eyebrow">
+            <i class="fas fa-circle"></i>
+            THE SOUND OF YOUR WORLD
+        </div>
+
+        <div class="hero-bottom">
+
+            <div>
+                <h1>
+                    Feel every<br>
+                    <span>Frequency.</span>
+                </h1>
+
+                <p>
+                    Your music. Your mood. Your moment.
+                    Discover the soundtrack to your life,
+                    one beautiful beat at a time.
+                </p>
+            </div>
+
+            <div class="visualizer" aria-hidden="true">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MUSIC LIBRARY -->
+
+    <section class="music-panel">
+
+        <div class="panel-header">
+
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <i class="fas fa-compact-disc"
+                       style="color:var(--primary); margin-right:8px;"></i>
+                    Your Music Library
+                </div>
+
+                <div class="panel-subtitle">
+                    Every beat has a story.
+                </div>
+            </div>
+
+            <div class="library-count">
+                <i class="fas fa-headphones"></i>
+                <span id="songCount">{{ songs|length }} TRACKS</span>
+            </div>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input
+                type="text"
+                id="songSearch"
+                placeholder="Search songs or artists..."
+                aria-label="Search songs or artists"
+                autocomplete="off"
+            >
+        </div>
+
+
+        <!-- SONG LIST -->
+
+        <ul id="songList">
+
+            {% for song in songs %}
+
+            <li class="song-item">
+
+                <div class="song-info">
+
+                    <div class="song-art">
+                        <i class="fas fa-music"></i>
+                    </div>
+
+                    <div class="song-details">
+
+                        <div class="song-title">
+                            {{ song.title }}
+                        </div>
+
+                        <div class="artist">
+                            <i class="fas fa-user"></i>
+                            {{ song.artist }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="song-meta">
+
+                    <span class="length">
+                        {{ song.length }}
+                    </span>
+
+                    <button class="play-btn"
+                            type="button"
+                            aria-label="Play {{ song.title }}"
+                            title="Audio playback not connected">
+                        <i class="fas fa-play"></i>
+                    </button>
+
+                </div>
+
+            </li>
+
+            {% empty %}
+
+            <li class="empty-state">
+
+                <div class="empty-icon">
+                    <i class="fas fa-compact-disc"></i>
+                </div>
+
+                <h3>Your story starts here.</h3>
+
+                <p>
+                    No tracks in your collection yet.<br>
+                    Add your first song and let the music begin.
+                </p>
+
+            </li>
+
+            {% endfor %}
+
+        </ul>
+
+        <div class="no-results" id="noResults">
+            <i class="fas fa-search" style="font-size:24px; margin-bottom:12px;"></i>
+            <p>No matching tracks found.</p>
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+        <i class="fas fa-heart"></i>
+        CRAFTED FOR THE LOVE OF MUSIC
+        <span> · SONICWAVE ©</span>
+    </footer>
+
+</div>
+
+
+<!-- SEARCH FUNCTIONALITY -->
+
+<script>
+const searchInput = document.getElementById("songSearch");
+const songList = document.getElementById("songList");
+const songCount = document.getElementById("songCount");
+const noResults = document.getElementById("noResults");
+
+const songs = Array.from(
+    document.querySelectorAll(".song-item")
+);
+
+function filterSongs() {
+
+    const query = searchInput.value.toLowerCase().trim();
+
+    let visibleCount = 0;
+
+    songs.forEach(song => {
+
+        const title = song.querySelector(".song-title")?.textContent
+            .toLowerCase() || "";
+
+        const artist = song.querySelector(".artist")?.textContent
+            .toLowerCase() || "";
+
+        const matches = title.includes(query) ||
+                        artist.includes(query);
+
+        song.style.display = matches ? "flex" : "none";
+
+        if (matches) visibleCount++;
+
+    });
+
+    songCount.textContent = query
+        ? `${visibleCount} RESULTS`
+        : `${songs.length} TRACKS`;
+
+    noResults.style.display =
+        songs.length > 0 && visibleCount === 0
+        ? "block" : "none";
+}
+
+searchInput.addEventListener("input", filterSongs);
+</script>
+
+</body>
+</html>
