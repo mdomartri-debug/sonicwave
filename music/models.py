@@ -12,6 +12,13 @@ class Song(models.Model):
     is_explicit = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     audio_file = models.FileField(upload_to='songs/', blank=True, null=True)
+    uploaded_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="songs",
+    )
 
     def __str__(self):
         return f"{self.title} by {self.artist}"

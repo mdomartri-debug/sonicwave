@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.http import request
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from mutagen import File as MutagenFile
@@ -56,6 +57,7 @@ def upload_song(request):
                 else:
                     song = form.save(commit=False)
                     song.duration_seconds = duration
+                    song.uploaded_by = request.user
                     song.save()
                     return redirect("song_list")
     else:
