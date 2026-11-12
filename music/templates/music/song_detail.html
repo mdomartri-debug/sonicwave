@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ song.title }}</title>
+  <style>
+    body { background: #121212; color: #fff; font-family: Arial, sans-serif;
+           max-width: 700px; margin: 40px auto; padding: 0 16px; }
+    h1 { color: #1db9a6; }
+    .meta { color: #b3b3b3; }
+    a { color: #1db9a6; }
+  </style>
+</head>
+<body>
+  <h1><a href="{% url 'song_detail' song.id %}" style="color:inherit">{{ song.title }}</a></h1>
+  <p class="meta">by {{ song.artist }}</p>
+  <p>Length: {{ song.length }}</p>
+  <p><a href="{% url 'song_list' %}">Back to all songs</a></p>
+</body>
+</html>

@@ -771,7 +771,7 @@ li.song-item:hover {
                     <div class="song-details">
 
                         <div class="song-title">
-                            {{ song.title }}
+                            <a href="{% url 'song_detail' song.id %}" style="color:inherit; text-decoration:none">{{ song.title }}</a>
                         </div>
 
                         <div class="artist">
@@ -792,7 +792,7 @@ li.song-item:hover {
 
                     <button class="play-btn"
                             type="button"
-                            aria-label="Play {{ song.title }}"
+                            aria-label="Play {{ song.title }}" <a href="{% url 'song_detail' song.id %}" style="color:inherit; text-decoration:none">{{ song.title }}</a>"
                             title="Audio playback not connected">
                         <i class="fas fa-play"></i>
                     </button>
