@@ -713,6 +713,39 @@ li.song-item:hover {
 
     </section>
 
+        <!-- AUTH BAR -->
+
+    <div style="display:flex; justify-content:flex-end; align-items:center; gap:12px; margin-bottom:16px;">
+
+        {% if user.is_authenticated %}
+
+            <span style="color:#8b97a9; font-size:13px;">
+                Hi, {{ user.username }}
+            </span>
+
+            <form method="post" action="{% url 'logout' %}" style="margin:0;">
+                {% csrf_token %}
+                <button type="submit"
+                        style="background:transparent; color:#24e0bd; border:1px solid #24e0bd;
+                               padding:7px 16px; border-radius:8px; cursor:pointer;
+                               font-size:13px; font-weight:600;">
+                    Log out
+                </button>
+            </form>
+
+        {% else %}
+
+            <a href="{% url 'login' %}"
+               style="color:#24e0bd; border:1px solid #24e0bd; padding:7px 16px;
+                      border-radius:8px; font-size:13px; font-weight:600;
+                      text-decoration:none;">
+                Log in
+            </a>
+
+        {% endif %}
+
+    </div>
+
 
     <!-- MUSIC LIBRARY -->
 
@@ -901,7 +934,7 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function () {
             var src = btn.getAttribute('data-audio');
             if (!src) {
-                alert('No audio file has been uploaded for this song yet.');
+                alert('এই গানের অডিও ফাইল আপলোড করা হয়নি।');
                 return;
             }
 
