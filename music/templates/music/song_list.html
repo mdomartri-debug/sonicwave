@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -600,9 +601,7 @@ body::after {
     50% { transform: scale(1.35); }
 }
 
-/* =================================
-   ADD TO PLAYLIST - SONICWAVE
-================================= */
+/* ADD TO PLAYLIST */
 
 .pl-form {
     margin: 0;
@@ -611,23 +610,17 @@ body::after {
     gap: 7px;
 }
 
-/* Playlist Select */
-
 .pl-select {
     height: 36px;
     max-width: 120px;
     padding: 0 10px;
-
     background: rgba(4,10,19,.75);
     color: #aab5c6;
-
     border: 1px solid rgba(255,255,255,.09);
     border-radius: 10px;
-
     font-family: inherit;
     font-size: 11px;
     font-weight: 600;
-
     outline: none;
     cursor: pointer;
     transition: .25s ease;
@@ -648,27 +641,20 @@ body::after {
     color: #f4f7fc;
 }
 
-/* Add Button */
-
 .pl-add-btn {
     width: 36px;
     height: 36px;
     flex-shrink: 0;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     color: #9aa7b9;
     background: rgba(255,255,255,.025);
-
     border: 1px solid rgba(255,255,255,.09);
     border-radius: 10px;
-
     font-size: 12px;
     text-decoration: none;
     cursor: pointer;
-
     transition: .25s ease;
 }
 
@@ -676,7 +662,6 @@ body::after {
     color: #061a15;
     background: linear-gradient(135deg, #54f5d3, #22cba9);
     border-color: var(--primary);
-
     box-shadow: 0 5px 18px rgba(40,224,189,.18);
     transform: translateY(-2px);
 }
@@ -685,17 +670,13 @@ body::after {
     transform: scale(.94);
 }
 
-/* My Playlists Link */
-
 .my-playlists-link {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-
     color: var(--primary);
     font-size: 12px;
     font-weight: 700;
-
     text-decoration: none;
     transition: .25s ease;
 }
@@ -703,29 +684,6 @@ body::after {
 .my-playlists-link:hover {
     color: #8cf8e0;
     transform: translateX(3px);
-}
-
-/* Mobile Responsive */
-
-@media (max-width: 600px) {
-    .pl-form {
-        gap: 5px;
-    }
-
-    .pl-select {
-        max-width: 105px;
-        font-size: 10px;
-        padding: 0 7px;
-    }
-
-    .pl-add-btn {
-        width: 34px;
-        height: 34px;
-    }
-
-    .my-playlists-link {
-        font-size: 11px;
-    }
 }
 
 /* PLAY BUTTON */
@@ -1008,6 +966,25 @@ body::after {
         height: 32px;
         font-size: 10px;
     }
+
+    .pl-form {
+        gap: 5px;
+    }
+
+    .pl-select {
+        max-width: 105px;
+        font-size: 10px;
+        padding: 0 7px;
+    }
+
+    .pl-add-btn {
+        width: 34px;
+        height: 34px;
+    }
+
+    .my-playlists-link {
+        font-size: 11px;
+    }
 }
 
 @media(max-width: 440px) {
@@ -1072,18 +1049,221 @@ body::after {
     }
 }
 
-@media(prefers-reduced-motion:reduce) {
-    *,*::before,*::after {
+/* ========================================
+   PREMIUM FLASH NOTIFICATIONS
+======================================== */
+
+.flash-wrap {
+    position: fixed;
+    top: 22px;
+    right: 22px;
+    z-index: 99999;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    width: min(360px, calc(100% - 32px));
+    pointer-events: none;
+}
+
+.flash {
+    --flash-accent: #36e6c1;
+
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 16px 18px;
+
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.09);
+
+    background: linear-gradient(
+        135deg,
+        rgba(20,30,45,.97),
+        rgba(10,16,28,.97)
+    );
+
+    color: #f4f7fc;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.38),
+        inset 0 1px 0 rgba(255,255,255,.04),
+        0 0 20px rgba(54,230,193,.08);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    animation: flashEnter .45s cubic-bezier(.2,.8,.2,1) forwards;
+
+    pointer-events: auto;
+}
+
+.flash > i {
+    flex-shrink: 0;
+    font-size: 17px;
+    color: var(--flash-accent);
+}
+
+.flash span {
+    flex: 1;
+    min-width: 0;
+}
+
+/* LEFT ACCENT */
+
+.flash::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 3px;
+
+    background: var(--flash-accent);
+    box-shadow: 0 0 14px var(--flash-accent);
+}
+
+/* BOTTOM PROGRESS */
+
+.flash::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    height: 2px;
+    width: 100%;
+
+    background: var(--flash-accent);
+    transform-origin: left;
+    animation: flashProgress 4.5s linear forwards;
+}
+
+/* STATUS COLORS */
+
+.flash.success {
+    --flash-accent: #36e6c1;
+    color: #baffef;
+    border-color: rgba(54,230,193,.22);
+}
+
+.flash.info {
+    --flash-accent: #82aaff;
+    color: #c4d7ff;
+    border-color: rgba(130,170,255,.22);
+}
+
+.flash.error {
+    --flash-accent: #ff6685;
+    color: #ffc0ce;
+    border-color: rgba(255,102,133,.25);
+}
+
+.flash.warning {
+    --flash-accent: #ffbd59;
+    color: #ffe0a8;
+    border-color: rgba(255,189,89,.25);
+}
+
+/* FLASH ANIMATIONS */
+
+@keyframes flashEnter {
+    from {
+        opacity: 0;
+        transform: translateX(35px) scale(.96);
+        filter: blur(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes flashProgress {
+    from {
+        transform: scaleX(1);
+    }
+
+    to {
+        transform: scaleX(0);
+    }
+}
+
+/* FLASH MOBILE */
+
+@media(max-width: 480px) {
+    .flash-wrap {
+        top: 12px;
+        right: 12px;
+        width: calc(100% - 24px);
+    }
+
+    .flash {
+        padding: 14px 16px;
+        font-size: 12px;
+        border-radius: 13px;
+    }
+}
+
+/* REDUCED MOTION */
+
+@media(prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
         animation-duration: .01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: .01ms !important;
         scroll-behavior: auto !important;
     }
 }
+
 </style>
 </head>
 
 <body>
+
+<!-- =================================
+     PREMIUM FLASH MESSAGES
+================================== -->
+
+{% if messages %}
+<div class="flash-wrap" id="flashWrap">
+
+    {% for message in messages %}
+
+    <div class="flash {{ message.tags }}">
+
+        {% if 'success' in message.tags %}
+            <i class="fas fa-circle-check"></i>
+        {% elif 'error' in message.tags %}
+            <i class="fas fa-circle-exclamation"></i>
+        {% elif 'info' in message.tags %}
+            <i class="fas fa-circle-info"></i>
+        {% elif 'warning' in message.tags %}
+            <i class="fas fa-triangle-exclamation"></i>
+        {% else %}
+            <i class="fas fa-bell"></i>
+        {% endif %}
+
+        <span>{{ message }}</span>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+{% endif %}
+
 
 <div class="container">
 
@@ -1101,10 +1281,17 @@ body::after {
         <div class="nav-right">
 
             {% if user.is_authenticated %}
+
             <a href="{% url 'playlist_list' %}" class="my-playlists-link">
                 <i class="fas fa-list"></i>
                 My Playlists
             </a>
+
+            <a href="{% url 'liked_songs' %}" class="my-playlists-link">
+                <i class="fas fa-heart"></i>
+                Liked Songs
+            </a>
+
             {% endif %}
 
             <div class="studio-label">
@@ -1170,6 +1357,7 @@ body::after {
 
             <form method="post" action="{% url 'logout' %}" style="margin:0;">
                 {% csrf_token %}
+
                 <button type="submit" class="auth-btn">
                     <i class="fas fa-right-from-bracket"></i>
                     Log out
@@ -1469,7 +1657,9 @@ body::after {
 </div>
 
 
-<!-- SEARCH FUNCTIONALITY -->
+<!-- =================================
+     SEARCH FUNCTIONALITY
+================================== -->
 
 <script>
 const searchInput = document.getElementById("songSearch");
@@ -1528,7 +1718,9 @@ clearSearch.addEventListener("click", function() {
 </script>
 
 
-<!-- AUDIO PLAYER -->
+<!-- =================================
+     AUDIO PLAYER
+================================== -->
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -1647,6 +1839,35 @@ document.addEventListener("DOMContentLoaded", function() {
         if (currentBtn) {
             resetButton(currentBtn);
         }
+
+    });
+
+});
+</script>
+
+
+<!-- =================================
+     FLASH MESSAGE AUTO DISMISS
+================================== -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    document.querySelectorAll(".flash").forEach(function(flash) {
+
+        setTimeout(function() {
+
+            flash.style.transition =
+                "opacity .4s ease, transform .4s ease";
+
+            flash.style.opacity = "0";
+            flash.style.transform = "translateX(25px)";
+
+            setTimeout(function() {
+                flash.remove();
+            }, 450);
+
+        }, 4100);
 
     });
 

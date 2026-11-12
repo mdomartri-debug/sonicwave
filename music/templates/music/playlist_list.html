@@ -535,10 +535,241 @@ button, input {
         animation-duration: .01ms !important;
     }
 }
+
+
+/* ========================================
+   SONICWAVE — ELITE FLASH NOTIFICATIONS
+======================================== */
+
+.flash-wrap {
+    position: fixed;
+    top: 22px;
+    right: 22px;
+    z-index: 99999;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    width: min(370px, calc(100% - 32px));
+    pointer-events: none;
+}
+
+/* MAIN NOTIFICATION */
+
+.flash {
+    --accent: #36e6c1;
+
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    padding: 17px 19px;
+
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(20,30,45,.96),
+            rgba(8,14,25,.98)
+        );
+
+    color: #f4f7fc;
+
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.6;
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.4),
+        inset 0 1px 0 rgba(255,255,255,.05),
+        0 0 22px rgba(54,230,193,.06);
+
+    animation: flashEnter .45s cubic-bezier(.2,.8,.2,1) both;
+
+    pointer-events: auto;
+}
+
+/* LEFT NEON LINE */
+
+.flash::before {
+    content: "";
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    bottom: 0;
+
+    width: 3px;
+
+    background: var(--accent);
+    box-shadow: 0 0 15px var(--accent);
+}
+
+/* STATUS ICON */
+
+.flash i {
+    flex-shrink: 0;
+
+    display: grid;
+    place-items: center;
+
+    width: 36px;
+    height: 36px;
+
+    border-radius: 11px;
+
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+
+    font-size: 15px;
+}
+
+/* MESSAGE TEXT */
+
+.flash span {
+    flex: 1;
+    min-width: 0;
+}
+
+/* SUCCESS */
+
+.flash.success {
+    --accent: #36e6c1;
+
+    color: #baffef;
+    border-color: rgba(54,230,193,.22);
+}
+
+/* INFO */
+
+.flash.info {
+    --accent: #82aaff;
+
+    color: #c4d7ff;
+    border-color: rgba(130,170,255,.22);
+}
+
+/* ERROR */
+
+.flash.error {
+    --accent: #ff6685;
+
+    color: #ffc0ce;
+    border-color: rgba(255,102,133,.25);
+}
+
+/* WARNING */
+
+.flash.warning {
+    --accent: #ffbd59;
+
+    color: #ffe0a8;
+    border-color: rgba(255,189,89,.25);
+}
+
+/* PROGRESS BAR */
+
+.flash::after {
+    content: "";
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 2px;
+
+    background: var(--accent);
+    transform-origin: left;
+
+    animation: flashProgress 4.5s linear forwards;
+}
+
+/* ENTRY ANIMATION */
+
+@keyframes flashEnter {
+    from {
+        opacity: 0;
+        transform: translateX(40px) scale(.96);
+        filter: blur(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+/* PROGRESS ANIMATION */
+
+@keyframes flashProgress {
+    from {
+        transform: scaleX(1);
+    }
+
+    to {
+        transform: scaleX(0);
+    }
+}
+
+/* MOBILE RESPONSIVE */
+
+@media(max-width: 480px) {
+
+    .flash-wrap {
+        top: 12px;
+        right: 12px;
+
+        width: calc(100% - 24px);
+    }
+
+    .flash {
+        padding: 14px 15px;
+        gap: 11px;
+
+        font-size: 12px;
+        border-radius: 14px;
+    }
+
+    .flash i {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+}
+
+/* REDUCED MOTION */
+
+@media(prefers-reduced-motion: reduce) {
+
+    .flash,
+    .flash::after {
+        animation: none;
+    }
+}
+
 </style>
 </head>
 
 <body>
+{% if messages %}
+<div class="flash-wrap">
+    {% for message in messages %}
+    <div class="flash {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
 <div class="container">
 
     <!-- Navigation -->

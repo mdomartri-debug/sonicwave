@@ -2,6 +2,7 @@ import secrets
 from datetime import timedelta
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
@@ -181,7 +182,15 @@ def playlist_list(request):
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
         if name:
-            Playlist.objects.create(owner=request.user, name=name[:100])
+            playlist, created = Playlist.objects.get_or_create(
+                owner=request.user, name=name[:100]
+            )
+            if created:
+                messages.success(request, f'Playlist "{playlist.name}" was created.')
+            else:
+                messages.info(request, f'You already have a playlist named "{playlist.name}".')
+        else:
+            messages.error(request, "Please enter a playlist name.")
         return redirect("playlist_list")
 
     playlists = Playlist.objects.filter(owner=request.user)
@@ -204,7 +213,13 @@ def add_to_playlist(request, song_id):
     playlist_id = request.POST.get("playlist_id", "")
     if playlist_id.isdigit():
         playlist = get_object_or_404(Playlist, id=int(playlist_id), owner=request.user)
-        playlist.songs.add(song)
+        if playlist.songs.filter(id=song.id).exists():
+            messages.info(request, f'"{song.title}" is already in "{playlist.name}".')
+        else:
+            playlist.songs.add(song)
+            messages.success(request, f'"{song.title}" was added to "{playlist.name}".')
+    else:
+        messages.error(request, "Please choose a playlist first.")
     return redirect("song_list")
 
 
@@ -214,6 +229,7 @@ def remove_from_playlist(request, playlist_id, song_id):
     playlist = get_object_or_404(Playlist, id=playlist_id, owner=request.user)
     song = get_object_or_404(Song, id=song_id)
     playlist.songs.remove(song)
+    messages.success(request, f'"{song.title}" was removed from "{playlist.name}".')
     return redirect("playlist_detail", playlist_id=playlist.id)
 
 
@@ -221,5 +237,17 @@ def remove_from_playlist(request, playlist_id, song_id):
 @require_POST
 def delete_playlist(request, playlist_id):
     playlist = get_object_or_404(Playlist, id=playlist_id, owner=request.user)
+    name = playlist.name
     playlist.delete()
+    messages.success(request, f'Playlist "{name}" was deleted.')
     return redirect("playlist_list")
+
+@login_required
+def liked_songs(request):
+    likes = (
+        Like.objects.filter(user=request.user)
+        .select_related("song")
+        .order_by("-created_at")
+    )
+    songs = [like.song for like in likes]
+    return render(request, "music/liked_songs.html", {"songs": songs})

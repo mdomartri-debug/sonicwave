@@ -1,0 +1,857 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Liked Songs | SonicWave</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root {
+    --bg: #070a12;
+    --surface: #101725;
+    --surface-2: #141e2d;
+
+    --primary: #36e6c1;
+    --primary-dark: #12bfa0;
+
+    --text: #f4f7fc;
+    --muted: #8996aa;
+
+    --border: rgba(255,255,255,.075);
+    --danger: #ff6685;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+
+    background:
+        radial-gradient(ellipse at 10% 0%, rgba(36,224,189,.10), transparent 38%),
+        radial-gradient(ellipse at 95% 20%, rgba(89,102,255,.10), transparent 35%),
+        var(--bg);
+
+    padding: 35px 22px 70px;
+}
+
+button {
+    font: inherit;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+}
+
+/* NAVIGATION */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 55px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    font-size: 19px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.brand-icon {
+    width: 38px;
+    height: 38px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 12px;
+    color: #061812;
+
+    background: linear-gradient(135deg, #54f5d3, #16bfa0);
+    box-shadow: 0 5px 25px rgba(40,224,189,.2);
+}
+
+.brand span {
+    color: var(--primary);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+
+    color: #aab5c6;
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    padding: 11px 15px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background: rgba(255,255,255,.025);
+    transition: .25s ease;
+}
+
+.nav-link:hover {
+    color: var(--primary);
+    border-color: rgba(54,230,193,.35);
+    transform: translateY(-2px);
+}
+
+/* HERO */
+
+.hero {
+    margin-bottom: 35px;
+}
+
+.eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+
+    margin-bottom: 16px;
+}
+
+.eyebrow::before {
+    content: "";
+    width: 24px;
+    height: 2px;
+
+    background: var(--primary);
+    border-radius: 10px;
+}
+
+.hero h1 {
+    font-size: clamp(34px, 6vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -2.5px;
+    font-weight: 900;
+
+    margin-bottom: 13px;
+}
+
+.hero h1 span {
+    background: linear-gradient(90deg, #49f3ce, #8cf8e0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero h1 i {
+    color: var(--danger);
+    font-size: .75em;
+    margin-right: 5px;
+}
+
+.hero p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+/* COLLECTION PANEL */
+
+.panel {
+    position: relative;
+    overflow: hidden;
+
+    padding: 27px;
+
+    background: linear-gradient(
+        145deg,
+        rgba(20,31,47,.96),
+        rgba(12,19,30,.98)
+    );
+
+    border: 1px solid var(--border);
+    border-radius: 21px;
+
+    box-shadow: 0 15px 45px rgba(0,0,0,.15);
+}
+
+.panel::before {
+    content: "";
+    position: absolute;
+
+    top: 0;
+    left: 25px;
+    right: 25px;
+
+    height: 1px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(54,230,193,.3),
+        transparent
+    );
+}
+
+/* PANEL HEADER */
+
+.panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    margin-bottom: 23px;
+}
+
+.panel-title {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -.3px;
+}
+
+.panel-subtitle {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+}
+
+.song-count {
+    min-width: 32px;
+    height: 32px;
+
+    display: grid;
+    place-items: center;
+
+    padding: 0 8px;
+
+    border-radius: 10px;
+
+    color: var(--danger);
+    background: rgba(255,102,133,.09);
+    border: 1px solid rgba(255,102,133,.15);
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+/* SONG ROW */
+
+.song-row {
+    padding: 17px;
+    margin-bottom: 12px;
+
+    background: rgba(255,255,255,.018);
+
+    border: 1px solid rgba(255,255,255,.055);
+    border-radius: 15px;
+
+    transition: .28s ease;
+}
+
+.song-row:last-child {
+    margin-bottom: 0;
+}
+
+.song-row:hover {
+    background: rgba(54,230,193,.045);
+    border-color: rgba(54,230,193,.22);
+    transform: translateY(-2px);
+}
+
+/* SONG TOP */
+
+.song-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.song-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.song-cover {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+
+    display: grid;
+    place-items: center;
+
+    color: var(--danger);
+
+    background: linear-gradient(
+        145deg,
+        rgba(255,102,133,.16),
+        rgba(255,102,133,.045)
+    );
+
+    border: 1px solid rgba(255,102,133,.14);
+    border-radius: 13px;
+
+    font-size: 17px;
+    transition: .25s;
+}
+
+.song-row:hover .song-cover {
+    color: white;
+    background: linear-gradient(135deg, #ff829e, #e94d78);
+}
+
+.song-details {
+    min-width: 0;
+}
+
+.song-title {
+    display: block;
+
+    color: #f4f7fc;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-decoration: none;
+    overflow-wrap: anywhere;
+
+    transition: .2s;
+}
+
+.song-title:hover {
+    color: var(--primary);
+}
+
+.song-artist {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 7px;
+}
+
+.song-artist i {
+    color: var(--primary);
+    margin-right: 5px;
+    font-size: 10px;
+}
+
+/* RIGHT ACTIONS */
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.length {
+    color: #a8b4c5;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* UNLIKE BUTTON */
+
+.song-action-form {
+    margin: 0;
+}
+
+.unlike-btn {
+    height: 36px;
+    padding: 0 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    color: #ff849b;
+    background: rgba(255,102,133,.055);
+
+    border: 1px solid rgba(255,102,133,.16);
+    border-radius: 10px;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    cursor: pointer;
+    transition: .25s ease;
+}
+
+.unlike-btn:hover {
+    color: white;
+    background: rgba(255,102,133,.17);
+    border-color: rgba(255,102,133,.4);
+
+    transform: translateY(-2px);
+}
+
+.unlike-btn:active {
+    transform: scale(.96);
+}
+
+/* AUDIO PLAYER */
+
+audio {
+    display: block;
+    width: 100%;
+    height: 36px;
+
+    margin-top: 15px;
+
+    accent-color: var(--primary);
+    opacity: .85;
+}
+
+audio:hover {
+    opacity: 1;
+}
+
+/* EMPTY STATE */
+
+.empty {
+    padding: 55px 15px;
+    text-align: center;
+}
+
+.empty-icon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 20px;
+
+    display: grid;
+    place-items: center;
+
+    color: var(--danger);
+
+    background: rgba(255,102,133,.07);
+    border: 1px solid rgba(255,102,133,.14);
+    border-radius: 23px;
+
+    font-size: 27px;
+}
+
+.empty h3 {
+    font-size: 17px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.empty p {
+    max-width: 330px;
+    margin: auto;
+
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.empty-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-top: 21px;
+    padding: 11px 17px;
+
+    color: #061a15;
+    background: linear-gradient(135deg, #54f5d3, #22cba9);
+
+    border-radius: 11px;
+    text-decoration: none;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    box-shadow: 0 7px 22px rgba(40,224,189,.15);
+    transition: .25s;
+}
+
+.empty-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(40,224,189,.25);
+}
+
+/* FOOTER */
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    margin-top: 32px;
+    padding-top: 22px;
+
+    border-top: 1px solid var(--border);
+
+    color: #68768b;
+    font-size: 10px;
+}
+
+.footer-brand {
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.footer-brand span {
+    color: var(--primary);
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 600px) {
+
+    body {
+        padding: 22px 15px 40px;
+    }
+
+    .topbar {
+        margin-bottom: 42px;
+        align-items: flex-start;
+    }
+
+    .brand {
+        font-size: 15px;
+    }
+
+    .brand-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .nav-links {
+        gap: 6px;
+    }
+
+    .nav-link {
+        padding: 10px;
+        font-size: 10px;
+        gap: 6px;
+    }
+
+    .hero {
+        margin-bottom: 27px;
+    }
+
+    .hero h1 {
+        letter-spacing: -1.7px;
+    }
+
+    .panel {
+        padding: 17px;
+        border-radius: 17px;
+    }
+
+    .song-row {
+        padding: 13px;
+    }
+
+    .song-top {
+        gap: 8px;
+    }
+
+    .song-info {
+        gap: 10px;
+    }
+
+    .song-cover {
+        width: 40px;
+        height: 40px;
+        font-size: 15px;
+    }
+
+    .song-title {
+        font-size: 12px;
+    }
+
+    .song-artist {
+        font-size: 10px;
+    }
+
+    .right {
+        gap: 7px;
+    }
+
+    .length {
+        font-size: 10px;
+    }
+
+    .unlike-btn {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        font-size: 0;
+    }
+
+    .unlike-btn i {
+        font-size: 12px;
+    }
+
+    .footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media(max-width: 380px) {
+    .brand {
+        font-size: 13px;
+    }
+
+    .nav-link {
+        padding: 9px 7px;
+        font-size: 9px;
+    }
+
+    .song-info {
+        gap: 8px;
+    }
+
+    .length {
+        display: none;
+    }
+}
+
+@media(prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- NAVIGATION -->
+
+    <header class="topbar">
+
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="fas fa-wave-square"></i>
+            </div>
+            SONIC<span>WAVE</span>
+        </div>
+
+        <div class="nav-links">
+
+            <a href="{% url 'song_list' %}" class="nav-link">
+                <i class="fas fa-arrow-left"></i>
+                All Songs
+            </a>
+
+            <a href="{% url 'playlist_list' %}" class="nav-link">
+                <i class="fas fa-compact-disc"></i>
+                Playlists
+            </a>
+
+        </div>
+
+    </header>
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="eyebrow">
+            Your personal favorites
+        </div>
+
+        <h1>
+            <i class="fas fa-heart"></i>
+            Liked <span>Songs.</span>
+        </h1>
+
+        <p>
+            All the music you love, collected in one place.
+            Your favorite tracks, always within reach.
+        </p>
+
+    </section>
+
+    <!-- SONG COLLECTION -->
+
+    <main class="panel">
+
+        <div class="panel-heading">
+
+            <div>
+                <div class="panel-title">
+                    Your Favorites
+                </div>
+
+                <div class="panel-subtitle">
+                    Your personally selected music collection.
+                </div>
+            </div>
+
+            <div class="song-count">
+                <i class="fas fa-heart"></i>
+                &nbsp;{{ songs|length }}
+            </div>
+
+        </div>
+
+        {% for song in songs %}
+
+        <div class="song-row">
+
+            <div class="song-top">
+
+                <div class="song-info">
+
+                    <div class="song-cover">
+                        <i class="fas fa-heart"></i>
+                    </div>
+
+                    <div class="song-details">
+
+                        <a
+                            href="{% url 'song_detail' song.id %}"
+                            class="song-title"
+                        >
+                            {{ song.title }}
+                        </a>
+
+                        <div class="song-artist">
+                            <i class="fas fa-user"></i>
+                            {{ song.artist }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="right">
+
+                    <span class="length">
+                        {{ song.length }}
+                    </span>
+
+                    <form
+                        method="post"
+                        action="{% url 'toggle_like' song.id %}"
+                        class="song-action-form"
+                    >
+
+                        {% csrf_token %}
+
+                        <input
+                            type="hidden"
+                            name="next"
+                            value="{% url 'liked_songs' %}"
+                        >
+
+                        <button
+                            type="submit"
+                            class="unlike-btn"
+                            title="Remove from liked songs"
+                            aria-label="Unlike {{ song.title }}"
+                        >
+                            <i class="fas fa-heart"></i>
+                            Unlike
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            {% if song.audio_file %}
+
+            <audio
+                controls
+                preload="none"
+                src="{{ song.audio_file.url }}"
+            ></audio>
+
+            {% endif %}
+
+        </div>
+
+        {% empty %}
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                <i class="fas fa-heart-crack"></i>
+            </div>
+
+            <h3>Your favorites start here.</h3>
+
+            <p>
+                You haven't liked any songs yet.
+                Explore your music collection and tap the heart
+                to save your favorite tracks.
+            </p>
+
+            <a href="{% url 'song_list' %}" class="empty-link">
+                <i class="fas fa-music"></i>
+                Explore Songs
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </main>
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <div class="footer-brand">
+            SONIC<span>WAVE</span>
+        </div>
+
+        <div>
+            Made for the love of music.
+            <i class="fas fa-heart" style="color:#ff6685;"></i>
+        </div>
+
+    </footer>
+
+</div>
+
+</body>
+</html>

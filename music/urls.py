@@ -5,6 +5,7 @@ urlpatterns = [
     path("songs/", views.song_list, name="song_list"),
     path("songs/<int:song_id>/", views.song_detail, name="song_detail"),
     path("songs/<int:song_id>/like/", views.toggle_like, name="toggle_like"),
+    path("liked/", views.liked_songs, name="liked_songs"),
     path("songs/<int:song_id>/add-to-playlist/", views.add_to_playlist, name="add_to_playlist"),
     path("playlists/", views.playlist_list, name="playlist_list"),
     path("playlists/<int:playlist_id>/", views.playlist_detail, name="playlist_detail"),
