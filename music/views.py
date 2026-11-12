@@ -4,28 +4,15 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 from mutagen import File as MutagenFile
 
 from .forms import RegisterForm, SongUploadForm
-from .models import Song, EmailOTP
-from datetime import timedelta
-
-from django.conf import settings
-from django.contrib.auth import get_user_model, login
-from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
-from django.http import request
-from django.shortcuts import render, get_object_or_404, redirect
-from django.utils import timezone
-from mutagen import File as MutagenFile
-
-from .forms import RegisterForm, SongUploadForm
-from .models import Song, EmailOTP
+from .models import Song, EmailOTP, Like, Playlist
 
 User = get_user_model()
 
@@ -35,7 +22,18 @@ MAX_DURATION_SECONDS = 60 * 60  # 1 hour
 
 def song_list(request):
     songs = Song.objects.all()
-    return render(request, "music/song_list.html", {"songs": songs})
+    liked_ids = []
+    playlists = []
+    if request.user.is_authenticated:
+        liked_ids = list(
+            Like.objects.filter(user=request.user).values_list("song_id", flat=True)
+        )
+        playlists = Playlist.objects.filter(owner=request.user)
+    return render(request, "music/song_list.html", {
+        "songs": songs,
+        "liked_ids": liked_ids,
+        "playlists": playlists,
+    })
 
 
 def song_detail(request, song_id):
@@ -161,3 +159,67 @@ def resend_otp(request):
             request.session["otp_notice"] = "A new code has been sent."
 
     return redirect("verify_otp")
+
+
+@login_required
+@require_POST
+def toggle_like(request, song_id):
+    song = get_object_or_404(Song, id=song_id)
+    like, created = Like.objects.get_or_create(user=request.user, song=song)
+    if not created:
+        like.delete()
+
+    next_url = request.POST.get("next", "")
+    if next_url and url_has_allowed_host_and_scheme(
+        next_url, allowed_hosts={request.get_host()}
+    ):
+        return redirect(next_url)
+    return redirect("song_list")
+
+@login_required
+def playlist_list(request):
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        if name:
+            Playlist.objects.create(owner=request.user, name=name[:100])
+        return redirect("playlist_list")
+
+    playlists = Playlist.objects.filter(owner=request.user)
+    return render(request, "music/playlist_list.html", {"playlists": playlists})
+
+
+@login_required
+def playlist_detail(request, playlist_id):
+    playlist = get_object_or_404(Playlist, id=playlist_id, owner=request.user)
+    return render(request, "music/playlist_detail.html", {
+        "playlist": playlist,
+        "songs": playlist.songs.all(),
+    })
+
+
+@login_required
+@require_POST
+def add_to_playlist(request, song_id):
+    song = get_object_or_404(Song, id=song_id)
+    playlist_id = request.POST.get("playlist_id", "")
+    if playlist_id.isdigit():
+        playlist = get_object_or_404(Playlist, id=int(playlist_id), owner=request.user)
+        playlist.songs.add(song)
+    return redirect("song_list")
+
+
+@login_required
+@require_POST
+def remove_from_playlist(request, playlist_id, song_id):
+    playlist = get_object_or_404(Playlist, id=playlist_id, owner=request.user)
+    song = get_object_or_404(Song, id=song_id)
+    playlist.songs.remove(song)
+    return redirect("playlist_detail", playlist_id=playlist.id)
+
+
+@login_required
+@require_POST
+def delete_playlist(request, playlist_id):
+    playlist = get_object_or_404(Playlist, id=playlist_id, owner=request.user)
+    playlist.delete()
+    return redirect("playlist_list")

@@ -1,0 +1,719 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Playlists | SonicWave</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root {
+    --bg: #070a12;
+    --surface: #101725;
+    --surface-2: #141e2d;
+    --primary: #36e6c1;
+    --primary-dark: #12bfa0;
+    --text: #f4f7fc;
+    --muted: #8996aa;
+    --border: rgba(255,255,255,.075);
+    --danger: #ff6685;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(ellipse at 10% 0%, rgba(36,224,189,.10), transparent 38%),
+        radial-gradient(ellipse at 95% 20%, rgba(89,102,255,.10), transparent 35%),
+        var(--bg);
+    padding: 35px 22px 70px;
+}
+
+button, input {
+    font: inherit;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* Navigation */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 55px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 19px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.brand-icon {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    color: #061812;
+    background: linear-gradient(135deg, #54f5d3, #16bfa0);
+    box-shadow: 0 5px 25px rgba(40,224,189,.2);
+}
+
+.brand span {
+    color: var(--primary);
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #aab5c6;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 11px 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255,255,255,.025);
+    transition: .25s ease;
+}
+
+.back-link:hover {
+    color: var(--primary);
+    border-color: rgba(54,230,193,.35);
+    transform: translateX(-3px);
+}
+
+/* Hero */
+
+.hero {
+    margin-bottom: 36px;
+}
+
+.eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.eyebrow::before {
+    content: "";
+    width: 24px;
+    height: 2px;
+    background: var(--primary);
+    border-radius: 10px;
+}
+
+.hero h1 {
+    font-size: clamp(34px, 6vw, 54px);
+    line-height: 1.1;
+    letter-spacing: -2.7px;
+    font-weight: 900;
+    margin-bottom: 13px;
+}
+
+.hero h1 span {
+    background: linear-gradient(90deg, #49f3ce, #8cf8e0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+/* Main content */
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+}
+
+.panel {
+    position: relative;
+    overflow: hidden;
+    padding: 27px;
+    background: linear-gradient(145deg, rgba(20,31,47,.96), rgba(12,19,30,.98));
+    border: 1px solid var(--border);
+    border-radius: 21px;
+    box-shadow: 0 15px 45px rgba(0,0,0,.15);
+}
+
+.panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 25px;
+    right: 25px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(54,230,193,.3), transparent);
+}
+
+/* Section heading */
+
+.panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 21px;
+}
+
+.panel-title {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -.3px;
+}
+
+.panel-subtitle {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+}
+
+/* Create playlist */
+
+.create-form {
+    display: flex;
+    gap: 11px;
+}
+
+.input-wrap {
+    position: relative;
+    flex: 1;
+}
+
+.input-wrap i {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    color: #6d7c90;
+    font-size: 14px;
+}
+
+.create-form input {
+    width: 100%;
+    height: 51px;
+    padding: 0 15px 0 44px;
+    color: white;
+    background: rgba(4,10,19,.65);
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 13px;
+    outline: none;
+    font-size: 13px;
+    transition: .25s;
+}
+
+.create-form input::placeholder {
+    color: #647187;
+}
+
+.create-form input:focus {
+    border-color: rgba(54,230,193,.65);
+    box-shadow: 0 0 0 4px rgba(54,230,193,.07);
+}
+
+.create-btn {
+    height: 51px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    white-space: nowrap;
+    color: #061a15;
+    background: linear-gradient(135deg, #54f5d3, #22cba9);
+    border: none;
+    border-radius: 13px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 7px 22px rgba(40,224,189,.16);
+    transition: .25s ease;
+}
+
+.create-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(40,224,189,.28);
+}
+
+.create-btn:active {
+    transform: scale(.97);
+}
+
+/* Playlist list */
+
+.playlist-panel {
+    padding-bottom: 18px;
+}
+
+.playlist-count {
+    min-width: 29px;
+    height: 29px;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    color: var(--primary);
+    background: rgba(54,230,193,.09);
+    border: 1px solid rgba(54,230,193,.13);
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.playlist-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 16px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255,255,255,.055);
+    border-radius: 15px;
+    background: rgba(255,255,255,.018);
+    transition: .28s ease;
+}
+
+.playlist-item:last-child {
+    margin-bottom: 0;
+}
+
+.playlist-item:hover {
+    background: rgba(54,230,193,.045);
+    border-color: rgba(54,230,193,.22);
+    transform: translateY(-2px);
+}
+
+.playlist-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 0;
+}
+
+.playlist-cover {
+    width: 49px;
+    height: 49px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    color: var(--primary);
+    background: linear-gradient(145deg, rgba(54,230,193,.17), rgba(54,230,193,.045));
+    border: 1px solid rgba(54,230,193,.13);
+    border-radius: 13px;
+    font-size: 18px;
+    transition: .25s;
+}
+
+.playlist-item:hover .playlist-cover {
+    color: #071b15;
+    background: linear-gradient(135deg, #54f5d3, #20c8a6);
+}
+
+.playlist-details {
+    min-width: 0;
+}
+
+.playlist-name {
+    display: block;
+    max-width: 100%;
+    color: #f4f7fc;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    transition: .2s;
+}
+
+.playlist-name:hover {
+    color: var(--primary);
+}
+
+.count {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.count i {
+    color: var(--primary);
+    margin-right: 5px;
+    font-size: 10px;
+}
+
+/* Delete button */
+
+.delete-form {
+    flex-shrink: 0;
+}
+
+.delete-btn {
+    height: 36px;
+    padding: 0 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ff849b;
+    background: rgba(255,102,133,.055);
+    border: 1px solid rgba(255,102,133,.16);
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .25s;
+}
+
+.delete-btn:hover {
+    background: rgba(255,102,133,.15);
+    border-color: rgba(255,102,133,.4);
+    transform: translateY(-1px);
+}
+
+/* Empty state */
+
+.empty {
+    padding: 48px 15px;
+    text-align: center;
+}
+
+.empty-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 19px;
+    display: grid;
+    place-items: center;
+    color: var(--primary);
+    background: rgba(54,230,193,.07);
+    border: 1px solid rgba(54,230,193,.14);
+    border-radius: 22px;
+    font-size: 26px;
+}
+
+.empty h3 {
+    font-size: 17px;
+    font-weight: 800;
+    margin-bottom: 9px;
+}
+
+.empty p {
+    max-width: 310px;
+    margin: auto;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+/* Footer */
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 32px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+    color: #68768b;
+    font-size: 10px;
+}
+
+.footer-brand {
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.footer-brand span {
+    color: var(--primary);
+}
+
+/* Responsive */
+
+@media(max-width: 600px) {
+    body {
+        padding: 22px 15px 40px;
+    }
+
+    .topbar {
+        margin-bottom: 42px;
+    }
+
+    .brand {
+        font-size: 16px;
+    }
+
+    .hero h1 {
+        letter-spacing: -1.7px;
+    }
+
+    .hero {
+        margin-bottom: 28px;
+    }
+
+    .panel {
+        padding: 19px;
+        border-radius: 17px;
+    }
+
+    .create-form {
+        flex-direction: column;
+    }
+
+    .create-btn {
+        width: 100%;
+    }
+
+    .playlist-item {
+        padding: 12px;
+        gap: 8px;
+    }
+
+    .playlist-info {
+        gap: 11px;
+    }
+
+    .playlist-cover {
+        width: 43px;
+        height: 43px;
+        font-size: 16px;
+    }
+
+    .playlist-name {
+        font-size: 12px;
+    }
+
+    .delete-btn {
+        width: 36px;
+        padding: 0;
+        justify-content: center;
+        font-size: 0;
+    }
+
+    .delete-btn i {
+        font-size: 12px;
+    }
+
+    .footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media(prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+    <!-- Navigation -->
+    <header class="topbar">
+
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="fas fa-wave-square"></i>
+            </div>
+            SONIC<span>WAVE</span>
+        </div>
+
+        <a href="{% url 'song_list' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            All Songs
+        </a>
+
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+
+        <div class="eyebrow">Your personal music space</div>
+
+        <h1>My <span>Playlists.</span></h1>
+
+        <p>
+            Your music. Your mood. Your collection.
+            Create the perfect soundtrack for every moment.
+        </p>
+
+    </section>
+
+    <main class="content-grid">
+
+        <!-- Create Playlist -->
+        <section class="panel">
+
+            <div class="panel-heading">
+                <div>
+                    <div class="panel-title">Create a playlist</div>
+                    <div class="panel-subtitle">
+                        Start building your next favorite collection.
+                    </div>
+                </div>
+                <div class="playlist-count">
+                    <i class="fas fa-plus"></i>
+                </div>
+            </div>
+
+            <form method="post" class="create-form">
+                {% csrf_token %}
+
+                <div class="input-wrap">
+                    <i class="fas fa-music"></i>
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Give your playlist a name..."
+                        maxlength="100"
+                        required
+                        aria-label="New playlist name"
+                    >
+                </div>
+
+                <button type="submit" class="create-btn">
+                    <i class="fas fa-plus"></i>
+                    Create Playlist
+                </button>
+
+            </form>
+
+        </section>
+
+        <!-- Playlist Collection -->
+        <section class="panel playlist-panel">
+
+            <div class="panel-heading">
+
+                <div>
+                    <div class="panel-title">Your Collection</div>
+                    <div class="panel-subtitle">
+                        All your playlists, together in one place.
+                    </div>
+                </div>
+
+                <div class="playlist-count">
+                    {{ playlists|length }}
+                </div>
+
+            </div>
+
+            {% for playlist in playlists %}
+
+            <div class="playlist-item">
+
+                <div class="playlist-info">
+
+                    <div class="playlist-cover">
+                        <i class="fas fa-compact-disc"></i>
+                    </div>
+
+                    <div class="playlist-details">
+
+                        <a
+                            class="playlist-name"
+                            href="{% url 'playlist_detail' playlist.id %}"
+                        >
+                            {{ playlist.name }}
+                        </a>
+
+                        <div class="count">
+                            <i class="fas fa-music"></i>
+                            {{ playlist.songs.count }}
+                            song{{ playlist.songs.count|pluralize }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <form
+                    method="post"
+                    class="delete-form"
+                    action="{% url 'delete_playlist' playlist.id %}"
+                    onsubmit="return confirm('Are you sure you want to delete this playlist?');"
+                >
+                    {% csrf_token %}
+
+                    <button type="submit" class="delete-btn">
+                        <i class="fas fa-trash-can"></i>
+                        Delete
+                    </button>
+
+                </form>
+
+            </div>
+
+            {% empty %}
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    <i class="fas fa-compact-disc"></i>
+                </div>
+
+                <h3>Your collection starts here.</h3>
+
+                <p>
+                    No playlists yet. Create your first playlist
+                    and start collecting the music you love.
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+
+        <div class="footer-brand">
+            SONIC<span>WAVE</span>
+        </div>
+
+        <div>
+            Made for the love of music.
+            <i class="fas fa-heart" style="color:#ff6685;"></i>
+        </div>
+
+    </footer>
+
+</div>
+</body>
+</html>
