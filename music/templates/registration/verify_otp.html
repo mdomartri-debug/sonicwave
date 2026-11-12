@@ -102,6 +102,12 @@
             font-size: 13px;
         }
 
+        .notice {
+            margin-top: 12px;
+            color: #26e6c1;
+            font-size: 13px;
+        }
+
         .submit-btn {
             width: 100%;
             margin-top: 20px;
@@ -115,6 +121,21 @@
             font-family: inherit;
             cursor: pointer;
         }
+
+        .resend-btn {
+            width: 100%;
+            padding: 13px;
+            background: transparent;
+            color: #26e6c1;
+            border: 1px solid rgba(38,230,193,.4);
+            border-radius: 13px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .resend-form { margin-top: 16px; }
 
         .links {
             margin-top: 24px;
@@ -165,8 +186,19 @@
                     <div class="error">{{ error }}</div>
                 {% endif %}
 
+                {% if notice %}
+                    <div class="notice">{{ notice }}</div>
+                {% endif %}
+
                 <button type="submit" class="submit-btn">
                     Verify &nbsp; →
+                </button>
+            </form>
+
+            <form method="post" action="{% url 'resend_otp' %}" class="resend-form">
+                {% csrf_token %}
+                <button type="submit" class="resend-btn">
+                    Resend code
                 </button>
             </form>
 

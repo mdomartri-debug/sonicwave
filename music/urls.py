@@ -6,5 +6,5 @@ urlpatterns = [
     path("songs/<int:song_id>/", views.song_detail, name="song_detail"),
     path("register/", views.register, name="register"),
     path("verify/", views.verify_otp, name="verify_otp"),
-
+    path("resend/", views.resend_otp, name="resend_otp"),
 ]

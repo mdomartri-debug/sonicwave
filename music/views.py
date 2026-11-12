@@ -1,9 +1,11 @@
 import secrets
+from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth import get_user_model, login
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
 
 from .forms import RegisterForm
 from .models import Song, EmailOTP
@@ -60,6 +62,7 @@ def verify_otp(request):
     user = get_object_or_404(User, id=user_id)
     otp = EmailOTP.objects.filter(user=user).first()
     error = None
+    notice = request.session.pop("otp_notice", None)
 
     if request.method == "POST":
         code = request.POST.get("code", "").strip()
@@ -83,4 +86,23 @@ def verify_otp(request):
     return render(request, "registration/verify_otp.html", {
         "email": user.email,
         "error": error,
+        "notice": notice,
     })
+
+
+def resend_otp(request):
+    user_id = request.session.get("pending_user_id")
+    if not user_id:
+        return redirect("register")
+
+    if request.method == "POST":
+        user = get_object_or_404(User, id=user_id)
+        otp = EmailOTP.objects.filter(user=user).first()
+
+        if otp and timezone.now() < otp.created_at + timedelta(seconds=60):
+            request.session["otp_notice"] = "Please wait a minute before requesting a new code."
+        else:
+            send_otp(user)
+            request.session["otp_notice"] = "A new code has been sent."
+
+    return redirect("verify_otp")
