@@ -9,3 +9,9 @@ class Song(models.Model):
 
     def __str__(self):
         return f"{self.title} by {self.artist}"
+
+    def length(self):
+        minutes = self.duration_seconds // 60
+        seconds = self.duration_seconds % 60
+        return f"{minutes}:{seconds:02d}"
+    
