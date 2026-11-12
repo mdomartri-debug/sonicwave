@@ -1,5 +1,10 @@
 from django.db import models
 
+from datetime import timedelta
+
+from django.conf import settings
+from django.utils import timezone
+
 class Song(models.Model):
     title = models.CharField(max_length=200)
     artist = models.CharField(max_length=200)
@@ -7,6 +12,18 @@ class Song(models.Model):
     is_explicit = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     audio_file = models.FileField(upload_to='songs/', blank=True, null=True)
+
+class EmailOTP(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now=True)
+    attempts = models.PositiveSmallIntegerField(default=0)
+
+    def is_expired(self):
+        return timezone.now() > self.created_at + timedelta(minutes=10)
+
+    def __str__(self):
+        return f"OTP for {self.user}"
 
     def __str__(self):
         return f"{self.title} by {self.artist}"

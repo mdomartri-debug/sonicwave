@@ -1,0 +1,612 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account | SonicWave</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --accent: #26e6c1;
+            --accent-dark: #0caa91;
+            --purple: #8b5cf6;
+            --bg: #070910;
+            --text: #f8fafc;
+            --muted: #929bad;
+            --border: rgba(255,255,255,.09);
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 45px 20px;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+
+            background:
+                radial-gradient(
+                    ellipse at 10% 15%,
+                    rgba(38,230,193,.13),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    ellipse at 90% 85%,
+                    rgba(139,92,246,.15),
+                    transparent 38%
+                ),
+                #070910;
+
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background lights */
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: .15;
+            pointer-events: none;
+            animation: float 9s ease-in-out infinite alternate;
+        }
+
+        body::before {
+            background: #26e6c1;
+            top: -100px;
+            left: -100px;
+        }
+
+        body::after {
+            background: #8b5cf6;
+            bottom: -100px;
+            right: -100px;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            from {
+                transform: translate(0, 0);
+            }
+
+            to {
+                transform: translate(80px, 50px);
+            }
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* BRAND */
+
+        .brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .brand-icon {
+            width: 66px;
+            height: 66px;
+            margin: 0 auto 14px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 21px;
+
+            background: linear-gradient(
+                135deg,
+                #35f4cd,
+                #0caa91
+            );
+
+            color: #041611;
+
+            font-family: 'Outfit', sans-serif;
+            font-size: 34px;
+            font-weight: 800;
+
+            box-shadow: 0 0 35px rgba(38,230,193,.25);
+
+            transform: rotate(-5deg);
+            transition: .3s ease;
+        }
+
+        .brand-icon:hover {
+            transform: rotate(0deg) scale(1.08);
+        }
+
+        .brand h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .brand h2 span {
+            color: var(--accent);
+        }
+
+        .brand small {
+            display: block;
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* MAIN CARD */
+
+        .card {
+            padding: 43px 40px;
+
+            border: 1px solid rgba(255,255,255,.11);
+            border-radius: 27px;
+
+            background: linear-gradient(
+                145deg,
+                rgba(24,32,47,.88),
+                rgba(12,16,27,.94)
+            );
+
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+
+            box-shadow:
+                0 30px 100px rgba(0,0,0,.5),
+                inset 0 1px 0 rgba(255,255,255,.05);
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 15%;
+            width: 70%;
+            height: 1px;
+
+            background: linear-gradient(
+                90deg,
+                transparent,
+                var(--accent),
+                transparent
+            );
+
+            opacity: .8;
+        }
+
+        /* HEADING */
+
+        .heading {
+            margin-bottom: 32px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            padding: 7px 12px;
+            margin-bottom: 17px;
+
+            border: 1px solid rgba(38,230,193,.2);
+            border-radius: 30px;
+
+            background: rgba(38,230,193,.07);
+
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .eyebrow span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .heading h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+        }
+
+        .heading p {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* DJANGO FORM */
+
+        form p {
+            margin-bottom: 21px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 9px;
+            color: #dce5ef;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 17px;
+
+            color: white;
+            background: rgba(255,255,255,.035);
+
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 13px;
+
+            outline: none;
+
+            font-family: inherit;
+            font-size: 14px;
+
+            transition: .25s ease;
+        }
+
+        input::placeholder {
+            color: #657083;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            background: rgba(38,230,193,.045);
+
+            box-shadow: 0 0 0 4px rgba(38,230,193,.09);
+        }
+
+        input:hover {
+            border-color: rgba(38,230,193,.35);
+        }
+
+        .helptext {
+            display: block;
+            margin-top: 9px;
+
+            color: #778397;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .helptext ul {
+            padding-left: 18px;
+            margin-top: 5px;
+        }
+
+        .errorlist {
+            list-style: none;
+            margin-bottom: 9px;
+
+            color: #ff7777;
+            font-size: 12px;
+        }
+
+        /* SIGNUP BUTTON */
+
+        .submit-btn {
+            width: 100%;
+            margin-top: 12px;
+            padding: 17px;
+
+            border: none;
+            border-radius: 13px;
+
+            background: linear-gradient(
+                110deg,
+                #35f4cd,
+                #12b99c
+            );
+
+            color: #041611;
+
+            font-size: 14px;
+            font-weight: 800;
+            font-family: inherit;
+
+            cursor: pointer;
+
+            transition: .3s ease;
+
+            box-shadow: 0 8px 25px rgba(38,230,193,.17);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(38,230,193,.3);
+        }
+
+        .submit-btn:active {
+            transform: scale(.98);
+        }
+
+        /* DIVIDER */
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+
+            margin: 27px 0;
+
+            color: #697487;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            height: 1px;
+            flex: 1;
+            background: rgba(255,255,255,.09);
+        }
+
+        /* FOOTER LINKS */
+
+        .links {
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .links p {
+            margin-bottom: 15px;
+        }
+
+        .links a {
+            color: var(--accent);
+            font-weight: 700;
+            text-decoration: none;
+            transition: .2s;
+        }
+
+        .links a:hover {
+            color: #fff;
+            text-shadow: 0 0 12px rgba(38,230,193,.5);
+        }
+
+        .back-link {
+            color: #929bad !important;
+            font-size: 12px;
+            font-weight: 500 !important;
+        }
+
+        /* MUSIC VISUALIZER */
+
+        .visualizer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+
+            height: 24px;
+            margin-top: 29px;
+        }
+
+        .visualizer span {
+            width: 3px;
+            border-radius: 5px;
+            background: var(--accent);
+
+            animation: equalize .8s ease-in-out infinite alternate;
+        }
+
+        .visualizer span:nth-child(1) {
+            height: 8px;
+            animation-delay: .1s;
+        }
+
+        .visualizer span:nth-child(2) {
+            height: 17px;
+            animation-delay: .3s;
+        }
+
+        .visualizer span:nth-child(3) {
+            height: 11px;
+            animation-delay: .2s;
+        }
+
+        .visualizer span:nth-child(4) {
+            height: 22px;
+            animation-delay: .4s;
+        }
+
+        .visualizer span:nth-child(5) {
+            height: 13px;
+            animation-delay: .15s;
+        }
+
+        .visualizer span:nth-child(6) {
+            height: 19px;
+            animation-delay: .35s;
+        }
+
+        .visualizer span:nth-child(7) {
+            height: 8px;
+            animation-delay: .25s;
+        }
+
+        @keyframes equalize {
+            from {
+                transform: scaleY(.4);
+            }
+
+            to {
+                transform: scaleY(1);
+            }
+        }
+
+        /* MOBILE RESPONSIVE */
+
+        @media(max-width: 520px) {
+
+            body {
+                padding: 30px 15px;
+            }
+
+            .card {
+                padding: 34px 24px;
+                border-radius: 22px;
+            }
+
+            .heading h1 {
+                font-size: 31px;
+            }
+
+            .brand h2 {
+                font-size: 27px;
+            }
+        }
+
+        /* ACCESSIBILITY */
+
+        @media(prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <main class="wrapper">
+
+        <!-- BRAND -->
+
+        <div class="brand">
+
+            <div class="brand-icon">S</div>
+
+            <h2>Sonic<span>Wave.</span></h2>
+
+            <small>Your music. Your universe.</small>
+
+        </div>
+
+
+        <!-- REGISTRATION CARD -->
+
+        <section class="card">
+
+            <div class="heading">
+
+                <div class="eyebrow">
+                    <span></span>
+                    JOIN THE COMMUNITY
+                </div>
+
+                <h1>
+                    Create account<span style="color:#26e6c1;">.</span>
+                </h1>
+
+                <p>
+                    Your next favorite song is waiting.
+                    Join SonicWave and discover your personal music universe.
+                </p>
+
+            </div>
+
+
+            <!-- DJANGO REGISTRATION FORM -->
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button type="submit" class="submit-btn">
+                    Create My Account &nbsp; →
+                </button>
+
+            </form>
+
+
+            <!-- DIVIDER -->
+
+            <div class="divider">
+                ALREADY PART OF THE SOUND?
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <div class="links">
+
+                <p>
+                    Already have an account?
+                    <a href="{% url 'login' %}">Log in</a>
+                </p>
+
+                <p>
+                    <a class="back-link" href="{% url 'song_list' %}">
+                        ← Back to all songs
+                    </a>
+                </p>
+
+            </div>
+
+
+            <!-- MUSIC VISUALIZER -->
+
+            <div class="visualizer">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email | SonicWave</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --accent: #26e6c1;
+            --text: #f8fafc;
+            --muted: #929bad;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 45px 20px;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(ellipse at 10% 15%, rgba(38,230,193,.13), transparent 35%),
+                radial-gradient(ellipse at 90% 85%, rgba(139,92,246,.15), transparent 38%),
+                #070910;
+        }
+
+        .wrapper { width: 100%; max-width: 460px; }
+
+        .brand { text-align: center; margin-bottom: 28px; }
+
+        .brand h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .brand h2 span { color: var(--accent); }
+
+        .card {
+            padding: 40px 36px;
+            border: 1px solid rgba(255,255,255,.11);
+            border-radius: 27px;
+            background: linear-gradient(145deg, rgba(24,32,47,.88), rgba(12,16,27,.94));
+            box-shadow: 0 30px 100px rgba(0,0,0,.5);
+        }
+
+        .card h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            letter-spacing: -1px;
+        }
+
+        .card p.sub {
+            margin: 10px 0 26px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .card p.sub b { color: var(--text); }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            color: #dce5ef;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 17px;
+            color: white;
+            text-align: center;
+            letter-spacing: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            font-family: inherit;
+            background: rgba(255,255,255,.035);
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 13px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(38,230,193,.09);
+        }
+
+        .error {
+            margin-top: 12px;
+            color: #ff7777;
+            font-size: 13px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 17px;
+            border: none;
+            border-radius: 13px;
+            background: linear-gradient(110deg, #35f4cd, #12b99c);
+            color: #041611;
+            font-size: 14px;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .links {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .links a {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="wrapper">
+
+        <div class="brand">
+            <h2>Sonic<span>Wave.</span></h2>
+        </div>
+
+        <section class="card">
+
+            <h1>Check your email<span style="color:#26e6c1;">.</span></h1>
+
+            <p class="sub">
+                We sent a 6-digit code to <b>{{ email }}</b>.
+                Enter it below to activate your account.
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <label for="code">Verification code</label>
+                <input type="text"
+                       id="code"
+                       name="code"
+                       maxlength="6"
+                       inputmode="numeric"
+                       autocomplete="one-time-code"
+                       placeholder="000000"
+                       required
+                       autofocus>
+
+                {% if error %}
+                    <div class="error">{{ error }}</div>
+                {% endif %}
+
+                <button type="submit" class="submit-btn">
+                    Verify &nbsp; →
+                </button>
+            </form>
+
+            <div class="links">
+                <a href="{% url 'register' %}">← Back to sign up</a>
+            </div>
+
+        </section>
+
+    </main>
+</body>
+</html>
