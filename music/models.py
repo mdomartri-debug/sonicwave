@@ -6,6 +6,7 @@ class Song(models.Model):
     duration_seconds = models.PositiveIntegerField()
     is_explicit = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    audio_file = models.FileField(upload_to='songs/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.title} by {self.artist}"

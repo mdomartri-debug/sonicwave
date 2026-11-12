@@ -791,10 +791,11 @@ li.song-item:hover {
                     </span>
 
                     <button class="play-btn"
-                            type="button"
-                            aria-label="Play {{ song.title }}" <a href="{% url 'song_detail' song.id %}" style="color:inherit; text-decoration:none">{{ song.title }}</a>"
-                            title="Audio playback not connected">
-                        <i class="fas fa-play"></i>
+                          type="button"
+                          aria-label="Play {{ song.title }}"
+                          {% if song.audio_file %}data-audio="{{ song.audio_file.url }}"{% endif %}
+                          title="Play">
+                      <i class="fas fa-play"></i>
                     </button>
 
                 </div>
@@ -886,6 +887,45 @@ function filterSongs() {
 }
 
 searchInput.addEventListener("input", filterSongs);
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var audio = new Audio();
+    var currentBtn = null;
+
+    function resetIcon(btn) {
+        if (btn) btn.querySelector('i').className = 'fas fa-play';
+    }
+
+    document.querySelectorAll('.play-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var src = btn.getAttribute('data-audio');
+            if (!src) {
+                alert('এই গানের অডিও ফাইল আপলোড করা হয়নি।');
+                return;
+            }
+
+            if (currentBtn === btn && !audio.paused) {
+                audio.pause();
+                resetIcon(btn);
+                return;
+            }
+
+            if (currentBtn !== btn) {
+                resetIcon(currentBtn);
+                audio.src = src;
+                currentBtn = btn;
+            }
+
+            audio.play();
+            btn.querySelector('i').className = 'fas fa-pause';
+        });
+    });
+
+    audio.addEventListener('ended', function () {
+        resetIcon(currentBtn);
+    });
+});
 </script>
 
 </body>
