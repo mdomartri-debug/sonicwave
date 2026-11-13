@@ -251,3 +251,18 @@ def liked_songs(request):
     )
     songs = [like.song for like in likes]
     return render(request, "music/liked_songs.html", {"songs": songs})
+
+@login_required
+@require_POST
+def rename_playlist(request, playlist_id):
+    playlist = get_object_or_404(Playlist, id=playlist_id, owner=request.user)
+    name = request.POST.get("name", "").strip()[:100]
+    if not name:
+        messages.error(request, "Please enter a playlist name.")
+    elif Playlist.objects.filter(owner=request.user, name=name).exclude(id=playlist.id).exists():
+        messages.info(request, f'You already have a playlist named "{name}".')
+    else:
+        playlist.name = name
+        playlist.save()
+        messages.success(request, f'Playlist renamed to "{name}".')
+    return redirect("playlist_detail", playlist_id=playlist.id)
